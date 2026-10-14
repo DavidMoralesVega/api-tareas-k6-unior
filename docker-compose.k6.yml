@@ -1,0 +1,44 @@
+# API de tareas (NestJS + Postgres) lista para las pruebas de carga con k6.
+# Un solo comando, igual en Windows, macOS y Linux:
+#   docker compose -f docker-compose.k6.yml up -d --build
+# API: http://localhost:3050/api · Swagger: http://localhost:3050/docs
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todo
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata-k6:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    ports:
+      - "3050:3050"
+    environment:
+      PORT: 3050
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/todo?schema=public
+      JWT_SECRET: clave-solo-para-clase
+      NOTIFICATION_SERVICE_URL: http://localhost:3060
+    working_dir: /app/packages/backend
+    # Crea las tablas (migraciones de Prisma), el usuario admin@todo.com / admin123 (seed) y arranca la API.
+    command: >-
+      sh -c "npx prisma migrate deploy --config prisma7.config.ts
+      && npx -y tsx prisma/seed.ts
+      && node dist/src/main.js"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata-k6:

@@ -27,6 +27,7 @@ RUN pnpm install --frozen-lockfile --filter todo-backend --prod
 
 COPY --from=builder /app/packages/backend/dist ./packages/backend/dist
 COPY --from=builder /app/packages/backend/generated ./packages/backend/generated
+COPY packages/backend/prisma7.config.ts ./packages/backend/
 
 ENV NODE_ENV=production
 EXPOSE 3050

@@ -1,3 +1,52 @@
+# api-tareas-k6-unior
+
+API de tareas (**NestJS + Prisma + PostgreSQL**) preparada para practicar **pruebas de carga con k6**
+en el **Módulo IV · Automatización avanzada de QA y pruebas de rendimiento** del Diplomado en
+Desarrollo de Aplicaciones Full Stack (UNIOR).
+
+Es el proyecto *todo-backend* del Módulo II, de [omarmus/todo-backend](https://github.com/omarmus/todo-backend)
+(el historial de commits se conserva). Lo único que se agregó es `docker-compose.k6.yml`, para levantar la
+API y su base de datos con **un solo comando**, igual en Windows, macOS y Linux.
+
+## Levantar la API para k6
+
+Requisito: **Docker Desktop** abierto (https://www.docker.com/products/docker-desktop/).
+
+```bash
+git clone https://github.com/DavidMoralesVega/api-tareas-k6-unior.git
+cd api-tareas-k6-unior
+docker compose -f docker-compose.k6.yml up -d --build
+```
+
+La primera vez tarda unos minutos (construye la imagen). Queda lista cuando esto responde:
+
+- API: http://localhost:3050/api
+- Swagger (documentación interactiva): http://localhost:3050/docs
+- Usuario creado por el seed: `admin@todo.com` / `admin123`
+
+| Comando | Qué hace |
+|---|---|
+| `docker compose -f docker-compose.k6.yml logs -f api` | ver lo que escribe la API (Ctrl + C para salir) |
+| `docker compose -f docker-compose.k6.yml down` | apagar todo (los datos quedan guardados) |
+| `docker compose -f docker-compose.k6.yml down -v` | apagar y borrar la base de datos |
+
+Postgres queda expuesto en el puerto **5433** (no 5432) para no chocar con otro Postgres instalado.
+
+## Los scripts de k6
+
+Están en el repo del curso: https://github.com/DavidMoralesVega/qa-unior-m4 (carpeta `k6/`).
+
+```bash
+k6 run 01-humo.js     # debe terminar con 12 out of 12 checks
+```
+
+---
+
+Material del Módulo IV · Docente: **David Morales Vega** · UNIOR · Dirección de Postgrado.
+Lo que sigue es el README original del proyecto.
+
+---
+
 # Todo App — Monorepo
 
 Proyecto de tareas construido como monorepo con **pnpm workspaces**.
