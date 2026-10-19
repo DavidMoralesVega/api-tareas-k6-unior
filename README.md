@@ -32,13 +32,26 @@ La primera vez tarda unos minutos (construye la imagen). Queda lista cuando esto
 
 Postgres queda expuesto en el puerto **5433** (no 5432) para no chocar con otro Postgres instalado.
 
-## Los scripts de k6
+## Las pruebas de rendimiento (carpeta `k6/`)
 
-Están en el repo del curso: https://github.com/DavidMoralesVega/qa-unior-m4 (carpeta `k6/`).
+Viven en el mismo repositorio que la API, al lado del código que prueban. Con la API levantada:
 
 ```bash
+cd k6
 k6 run 01-humo.js     # debe terminar con 12 out of 12 checks
 ```
+
+| Script | Qué pregunta |
+|---|---|
+| `01-humo.js` | ¿Responde bien con un solo usuario? |
+| `02-carga.js` | ¿Aguanta 30 usuarios con los umbrales (p95 < 200 ms, < 1 % de errores)? |
+| `05-umbral-que-falla.js` | Un umbral imposible: qué hace k6 cuando no se cumple (código 99) |
+| `03-estres.js` | ¿Dónde se rompe? Escalones de 100, 200 y 350 usuarios |
+| `04-picos.js` | ¿Sobrevive a un salto de 20 a 400 usuarios y se recupera? |
+| `06-navegador.js` | k6 browser: Web Vitals de la app Angular (necesita internet y Chrome) |
+| `07-quickpizza.js` | Lo mismo contra quickpizza.grafana.com, sin Docker (máximo 5 usuarios) |
+
+La URL de la API se cambia sin tocar el código: `k6 run -e API=http://otra:3050/api 01-humo.js`.
 
 ---
 

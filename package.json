@@ -7,7 +7,13 @@
     "start": "pnpm --filter backend run start",
     "start:dev": "pnpm --filter backend run start:dev",
     "test": "pnpm --filter backend run test",
-    "lint": "pnpm --filter backend run lint"
+    "lint": "pnpm --filter backend run lint",
+    "observabilidad": "docker compose -f docker-compose.observabilidad.yml up -d --build",
+    "observabilidad:apagar": "docker compose -f docker-compose.observabilidad.yml down",
+    "estres-grafana": "node scripts/estres-a-grafana.mjs",
+    "trazas": "k6 run k6/08-trazas.js",
+    "resumen-trazas": "node scripts/resumen-trazas.mjs",
+    "arbol": "node scripts/arbol-traza.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
